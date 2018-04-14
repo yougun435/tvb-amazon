@@ -1,7 +1,10 @@
 from flask import Flask, send_from_directory, request, Response
+from pymongo import MongoClient
+
+client = MongoClient('localhost', 27017)
+db = client.tvb_amazon
 
 app = Flask('mini-amazon', static_url_path='')
-product_list = []
 
 
 @app.route('/health', methods=['GET'])
@@ -17,23 +20,26 @@ def index():
 @app.route('/api/products', methods=['POST', 'GET'])
 def products():
     if request.method == 'GET':
-        print(product_list)
-        print(request.args['name'])
-        for product in product_list:
-            if product['name'] == request.args['name']:
-                return Response(str(product), 200)
-        return Response(str({}), 200)
+        matching_prods = db.products.find({'name': request.args['name']})
+        matches = []
+        for prod in matching_prods:
+            matches.append(prod)
+
+        return Response(str(matches), mimetype='application/json', status=200)
     elif request.method == 'POST':
         product = dict()
         product['name'] = request.form['name']
         product['description'] = request.form['description']
         product['price'] = request.form['price']
-        print(product)
 
-        product_list.append(product)
+        db.products.insert_one(product)
 
-        return Response('OK', 200)
+        return Response(str({'status': 'success'}), mimetype='application/json', status=200)
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
+json_obj = {
+    'name': ''
+}

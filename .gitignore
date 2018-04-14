@@ -102,3 +102,4 @@ ENV/
 
 # custome files
 .idea
+db
