@@ -1,11 +1,10 @@
 from flask import Flask, send_from_directory, request, Response
-from pymongo import MongoClient
-import re
-
-client = MongoClient('localhost', 27017)
-db = client.tvb_amazon
+from product import Product
 
 app = Flask('mini-amazon', static_url_path='')
+login_manager = LoginManager()
+
+prod = Product()
 
 
 @app.route('/health', methods=['GET'])
@@ -21,32 +20,39 @@ def index():
 @app.route('/api/products', methods=['POST', 'GET', 'DELETE'])
 def products():
     if request.method == 'GET':
-        query = {
-            'name': re.compile(request.args['name'], re.IGNORECASE)
-        }
-        matching_prods = db.products.find(query)
-        matches = []
-        for prod in matching_prods:
-            matches.append(prod)
-
+        matches = prod.search_by_name(request.args['name'])
         return Response(str(matches), mimetype='application/json', status=200)
     elif request.method == 'POST':
         if request.form['op_type'] == 'insert':
-            product = dict()
-            product['name'] = request.form['name']
-            product['description'] = request.form['description']
-            product['price'] = request.form['price']
+            p = dict()
+            p['name'] = request.form['name']
+            p['description'] = request.form['description']
+            p['price'] = request.form['price']
 
-            db.products.insert_one(product)
+            prod.save(p)
 
             return Response(str({'status': 'success'}), mimetype='application/json', status=200)
         elif request.form['op_type'] == 'delete':
-            name = request.form['name']
+            _id = request.form['_id']
+            prod.delete_by_id(_id)
 
-            db.products.delete_one(filter={'name': name})
+            return Response(str({'status': 'success'}), mimetype='application/json', status=200)
+        elif request.form['op_type'] == 'update':
+            _id = request.form['_id']
+
+            updated_product = dict()
+            if request.form['name'] != '':
+                updated_product['name'] = request.form['name']
+            if request.form['description'] != '':
+                updated_product['description'] = request.form['description']
+            if request.form['price'] != '':
+                updated_product['price'] = request.form['price']
+
+            prod.update_by_id(_id, updated_product)
 
             return Response(str({'status': 'success'}), mimetype='application/json', status=200)
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+    login_manager.init_app(app)
