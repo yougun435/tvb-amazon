@@ -1,5 +1,5 @@
 <h1>Add a product</h1>
-<form action="/api/products" method="post">
+<form action="/api/products" method="POST">
     <input type="text" name="op_type" value="insert" hidden>
     Name:<br>
     <input type="text" name="name" required><br>
@@ -11,7 +11,7 @@
 </form>
 
 <h1>Delete a product</h1>
-<form action="/api/products" method="post">
+<form action="/api/products" method="POST">
     <input type="text" name="op_type" value="delete" hidden>
     _id:<br>
     <input type="text" name="_id" required><br>
@@ -19,7 +19,7 @@
 </form>
 
 <h1>Update a product</h1>
-<form action="/api/products" method="post">
+<form action="/api/products" method="POST">
     <input type="text" name="op_type" value="update" hidden>
     _id:<br>
     <input type="text" name="_id" required><br>

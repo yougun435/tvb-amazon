@@ -1,4 +1,4 @@
-from flask import request, Response
+from flask import request, Response, render_template
 from tvb_amazon.models.product import Product
 from tvb_amazon import app
 
@@ -13,8 +13,14 @@ def health():
 @app.route('/api/products', methods=['POST', 'GET'])
 def products():
     if request.method == 'GET':
-        matches = product.search_by_name(request.args['name'])
-        return Response(str(matches), mimetype='application/json', status=200)
+        query = request.args['name']
+        matches = product.search_by_name(query)
+
+        output_type = request.args.get('output_type', None)
+        if output_type == 'html':
+            return render_template('results.html', query=query, results=matches)
+        else:
+            return Response(str(matches), mimetype='application/json', status=200)
     elif request.method == 'POST':
         if request.form['op_type'] == 'insert':
             p = dict()

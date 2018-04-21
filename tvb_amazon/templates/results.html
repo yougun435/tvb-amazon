@@ -1,0 +1,26 @@
+<h1>{{results|length}} results for "{{ query }}"</h1>
+
+{% for result in results%}
+    <div>
+        <h3>{{ result.name }}<br></h3>
+        Description : <b>{{ result.description }}</b><br>
+        Price : <i>{{ result.price }}</i><br>
+        <form action="/api/products" method="POST">
+            <input type="text" name="op_type" value="delete" hidden>
+            <input type="text" name="_id" value="{{ result._id }}" hidden><br>
+            <input type="submit" value="Delete">
+        </form>
+        <form action="/api/products" method="POST">
+            <input type="text" name="op_type" value="update" hidden>
+            <input type="text" name="_id" value="{{ result._id }}" hidden><br>
+            Updated Name:<br>
+            <input type="text" name="name"><br>
+            Updated Description:<br>
+            <input type="text" name="description"><br>
+            Updated Price:<br>
+            <input type="text" name="price"><br>
+            <input type="submit" value="Update">
+        </form>
+    </div>
+    <hr>
+{% endfor %}
