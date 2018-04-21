@@ -2,7 +2,6 @@ from flask import Flask, send_from_directory, request, Response
 from product import Product
 
 app = Flask('mini-amazon', static_url_path='')
-login_manager = LoginManager()
 
 prod = Product()
 
@@ -55,4 +54,3 @@ def products():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-    login_manager.init_app(app)
