@@ -1,8 +1,11 @@
 <h1>Welcome to Mini Amazon</h1>
+<p>{{ msg }}</p>
 <hr>
 
 <h2>Login</h2>
-<form action="/api/user/login" method="POST">
+<p style="color: red;">{{ login_msg }}</p>
+<form action="/api/user" method="POST">
+    <input type="text" name="op_type" value="login" hidden>
     Username : <input type="text" name="username" required><br>
     Password : <input type="password" name="password" required><br>
     <input type="submit" name="Login">
@@ -10,7 +13,9 @@
 <hr>
 
 <h2>Sign up</h2>
-<form action="/api/user/signup" method="POST">
+<p style="color: red;">{{ signup_msg }}</p>
+<form action="/api/user" method="POST">
+    <input type="text" name="op_type" value="signup" hidden>
     Name : <input type="text" name="name" required><br>
     Email : <input type="email" name="email" required><br>
     Username : <input type="text" name="username" required><br>
