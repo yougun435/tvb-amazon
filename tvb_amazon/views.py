@@ -4,4 +4,4 @@ from tvb_amazon import app
 
 @app.route('/', methods=['GET'])
 def index():
-    return send_from_directory('static', 'index.html')
+    return send_from_directory('./tvb_amazon/static', 'index.html')
