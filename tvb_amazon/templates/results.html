@@ -2,11 +2,12 @@
 
 {% for result in results%}
     <div>
-        <h3>{{ result.name }}<br></h3>
+        <h3>{{ result.name }}</h3><br>
         Description : <b>{{ result.description }}</b><br>
         Price : <i>{{ result.price }}</i><br>
 
         <form action="/api/cart" method="POST">
+            <input type="text" name="op_type" value="add" hidden>
             <input type="text" name="user_id" value="{{ user_id }}" hidden>
             <input type="text" name="product_id" value="{{ result._id }}" hidden><br>
             <input type="submit" value="Add to cart">
